@@ -1,5 +1,5 @@
 [package]
-name = "rs-completion"
+name = "rs-complete"
 version = "0.1.0"
 authors = ["Linus Probert <linus.probert@gmail.com>"]
 edition = "2018"

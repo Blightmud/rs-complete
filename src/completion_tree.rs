@@ -29,8 +29,8 @@ impl CompletionTree {
     ///
     /// # Example
     /// ```
-    /// extern crate rs_completion;
-    /// use rs_completion::CompletionTree;
+    /// extern crate rs_complete;
+    /// use rs_complete::CompletionTree;
     ///
     /// let mut completions = CompletionTree::default();
     /// completions.insert("test-hyphen test_underscore");
@@ -65,8 +65,8 @@ impl CompletionTree {
     ///
     /// # Example
     /// ```
-    /// extern crate rs_completion;
-    /// use rs_completion::CompletionTree;
+    /// extern crate rs_complete;
+    /// use rs_complete::CompletionTree;
     ///
     /// let mut completions = CompletionTree::default();
     ///
@@ -97,8 +97,8 @@ impl CompletionTree {
     ///
     /// # Example
     /// ```
-    /// extern crate rs_completion;
-    /// use rs_completion::CompletionTree;
+    /// extern crate rs_complete;
+    /// use rs_complete::CompletionTree;
     ///
     /// let mut completions = CompletionTree::default();
     /// completions.insert("batman robin batmobile batcave robber");

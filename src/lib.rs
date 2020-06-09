@@ -27,8 +27,8 @@
 //!
 //! ## Example
 //! ```
-//! extern crate rs_completion;
-//! use rs_completion::CompletionTree;
+//! extern crate rs_complete;
+//! use rs_complete::CompletionTree;
 //!
 //! let mut completions = CompletionTree::default();
 //!
