@@ -21,7 +21,7 @@
 //! characters in memory with no regards for consonant or verb rules. If this is what you need then
 //! you don't need a library for it.
 //!
-//! I can't argue if this solution is fast or efficient. It has worked to solve the problem 
+//! I can't argue if this solution is fast or efficient. It has worked to solve the problem
 //! I intended to solve when I created the library. If you have ideas for extensions or
 //! improvements I'm happy to see them.
 //!
@@ -119,5 +119,14 @@ mod tests {
         let completions = tree.complete("/dum").unwrap();
         assert!(completions.contains(&"/dumpster".to_string()));
         assert!(completions.contains(&"/dumpster_fire".to_string()));
+    }
+
+    #[test]
+    fn test_complete_empty_line() {
+        let mut tree = CompletionTree::default();
+        assert_eq!(tree.complete(""), None);
+        tree.insert("test testersson testington");
+        assert_eq!(tree.complete("barf"), None);
+        assert_eq!(tree.complete(""), None);
     }
 }
