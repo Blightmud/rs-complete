@@ -1,3 +1,8 @@
+![Rust](https://github.com/LiquidityC/rs-complete/workflows/Rust/badge.svg)
+![Clippy check](https://github.com/LiquidityC/rs-complete/workflows/Clippy%20check/badge.svg)
+![Security audit](https://github.com/LiquidityC/rs-complete/workflows/Security%20audit/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/LiquidityC/rs-complete/badge.svg?branch=master)](https://coveralls.io/github/LiquidityC/rs-complete?branch=master)
+
 # rs-complete
 
 rs-completion is a library to use when you want to implement tab-completion (or similar)
