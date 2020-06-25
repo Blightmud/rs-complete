@@ -127,6 +127,52 @@ impl CompletionTree {
         }
         None
     }
+
+    /// Clears all the data from the tree
+    /// # Example
+    /// ```
+    /// extern crate rs_complete;
+    /// use rs_complete::CompletionTree;
+    ///
+    /// let mut completions = CompletionTree::default();
+    /// completions.insert("batman robin batmobile batcave robber");
+    /// assert_eq!(completions.word_count(), 5);
+    /// assert_eq!(completions.size(), 24);
+    /// completions.clear();
+    /// assert_eq!(completions.size(), 1);
+    /// assert_eq!(completions.word_count(), 0);
+    /// ```
+    pub fn clear(&mut self) {
+        self.root.clear();
+    }
+
+    /// Returns a count of how many words that exist in the tree
+    /// # Example
+    /// ```
+    /// extern crate rs_complete;
+    /// use rs_complete::CompletionTree;
+    ///
+    /// let mut completions = CompletionTree::default();
+    /// completions.insert("batman robin batmobile batcave robber");
+    /// assert_eq!(completions.word_count(), 5);
+    /// ```
+    pub fn word_count(&self) -> u32 {
+        self.root.word_count()
+    }
+
+    /// Returns the size of the tree, the amount of nodes, not words
+    /// # Example
+    /// ```
+    /// extern crate rs_complete;
+    /// use rs_complete::CompletionTree;
+    ///
+    /// let mut completions = CompletionTree::default();
+    /// completions.insert("batman robin batmobile batcave robber");
+    /// assert_eq!(completions.size(), 24);
+    /// ```
+    pub fn size(&self) -> u32 {
+        self.root.subnode_count()
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -143,6 +189,26 @@ impl CompletionNode {
             leaf: false,
             inclusions: incl,
         }
+    }
+
+    fn clear(&mut self) {
+        self.subnodes.clear();
+    }
+
+    fn word_count(&self) -> u32 {
+        let mut count = self.subnodes.values().map(|n| n.word_count()).sum();
+        if self.leaf {
+            count += 1;
+        }
+        count
+    }
+
+    fn subnode_count(&self) -> u32 {
+        self.subnodes
+            .values()
+            .map(|n| n.subnode_count())
+            .sum::<u32>()
+            + 1
     }
 
     fn insert(&mut self, mut iter: Chars) {

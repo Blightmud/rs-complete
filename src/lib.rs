@@ -129,4 +129,30 @@ mod tests {
         assert_eq!(tree.complete("barf"), None);
         assert_eq!(tree.complete(""), None);
     }
+
+    #[test]
+    fn test_clear() {
+        let mut completions = CompletionTree::default();
+        completions.insert("batman robin batmobile batcave robber");
+        assert_eq!(completions.word_count(), 5);
+        assert_eq!(completions.size(), 24);
+        completions.clear();
+        assert_eq!(completions.size(), 1);
+        assert_eq!(completions.word_count(), 0);
+    }
+
+    #[test]
+    fn test_word_count() {
+        let mut completions = CompletionTree::default();
+        completions.insert("batman robin batmobile batcave robber");
+        assert_eq!(completions.word_count(), 5);
+    }
+
+    #[test]
+    fn test_size() {
+        let mut completions = CompletionTree::default();
+        assert_eq!(completions.size(), 1);
+        completions.insert("batman robin batmobile batcave robber");
+        assert_eq!(completions.size(), 24);
+    }
 }
