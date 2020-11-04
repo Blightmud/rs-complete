@@ -155,4 +155,19 @@ mod tests {
         completions.insert("batman robin batmobile batcave robber");
         assert_eq!(completions.size(), 24);
     }
+
+    #[test]
+    fn test_min_word_len() {
+        let mut completions = CompletionTree::default();
+        completions.set_min_word_len(4);
+        completions.insert("one two three four five");
+        assert_eq!(completions.min_word_len(), 4);
+        assert_eq!(completions.word_count(), 3);
+
+        let mut completions = CompletionTree::default();
+        completions.set_min_word_len(1);
+        completions.insert("one two three four five");
+        assert_eq!(completions.min_word_len(), 1);
+        assert_eq!(completions.word_count(), 5);
+    }
 }

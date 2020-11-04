@@ -6,6 +6,7 @@ use std::{rc::Rc, str::Chars};
 pub struct CompletionTree {
     root: CompletionNode,
     inclusions: Rc<BTreeSet<char>>,
+    min_word_len: usize,
 }
 
 impl Default for CompletionTree {
@@ -14,6 +15,7 @@ impl Default for CompletionTree {
         Self {
             root: CompletionNode::new(inclusions.clone()),
             inclusions,
+            min_word_len: 5,
         }
     }
 }
@@ -53,6 +55,7 @@ impl CompletionTree {
         Self {
             root: CompletionNode::new(inclusions.clone()),
             inclusions,
+            ..Self::default()
         }
     }
 
@@ -82,7 +85,7 @@ impl CompletionTree {
     /// ```
     pub fn insert(&mut self, line: &str) {
         for word in line.split_whitespace() {
-            if word.len() > 4 {
+            if word.len() >= self.min_word_len {
                 self.root.insert(word.chars());
             }
         }
@@ -172,6 +175,38 @@ impl CompletionTree {
     /// ```
     pub fn size(&self) -> u32 {
         self.root.subnode_count()
+    }
+
+    /// Returns the minimum word length to complete. This allows you
+    /// to pass full sentences to `insert()` and not worry about
+    /// pruning out small words like "a" or "to", because they will be
+    /// ignored.
+    /// # Example
+    /// ```
+    /// extern crate rs_complete;
+    /// use rs_complete::CompletionTree;
+    ///
+    /// let mut completions = CompletionTree::default();
+    /// completions.set_min_word_len(4);
+    /// completions.insert("one two three four five");
+    /// assert_eq!(completions.word_count(), 3);
+    ///
+    /// let mut completions = CompletionTree::default();
+    /// completions.set_min_word_len(1);
+    /// completions.insert("one two three four five");
+    /// assert_eq!(completions.word_count(), 5);
+    /// ```
+    pub fn min_word_len(&self) -> usize {
+        self.min_word_len
+    }
+
+    /// Sets the minimum word length to complete on. Smaller words are
+    /// ignored. This only affects future calls to `insert()` -
+    /// changing this won't start completing on smaller words that
+    /// were added in the past, nor will it exclude larger words
+    /// already inserted into the completion tree.
+    pub fn set_min_word_len(&mut self, len: usize) {
+        self.min_word_len = len;
     }
 }
 
