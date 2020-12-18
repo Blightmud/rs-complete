@@ -1,12 +1,12 @@
 [package]
 name = "rs-complete"
 description = "A library that handles text/word completion"
-version = "1.1.0"
+version = "1.1.1"
 authors = ["Linus Probert <linus.probert@gmail.com>"]
 edition = "2018"
 readme = "README.md"
-homepage = "https://github.com/liquidityc/rs-complete"
-repository = "https://github.com/liquidityc/rs-complete"
+homepage = "https://github.com/blightmud/rs-complete"
+repository = "https://github.com/blightmud/rs-complete"
 documentation = "https://docs.rs/rs-complete"
 license = "MIT"
 keywords = ["completion", "tab-completion", "text-completion"]
