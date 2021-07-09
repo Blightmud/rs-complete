@@ -42,6 +42,7 @@
 mod completion_tree;
 
 pub use completion_tree::CompletionTree;
+pub use completion_tree::WordSeparator;
 
 #[cfg(test)]
 mod tests {

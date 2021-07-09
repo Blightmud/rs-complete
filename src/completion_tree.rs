@@ -1,12 +1,20 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::{rc::Rc, str::Chars};
 
+/// Word separation type used by CompletionTree
+#[derive(Debug, Clone, PartialEq)]
+pub enum WordSeparator {
+    Whitespace,
+    Separator(&'static str),
+}
+
 /// A completion tree that holds and handles completions
 #[derive(Debug, Clone)]
 pub struct CompletionTree {
     root: CompletionNode,
     inclusions: Rc<BTreeSet<char>>,
     min_word_len: usize,
+    separator: WordSeparator,
 }
 
 impl Default for CompletionTree {
@@ -16,6 +24,7 @@ impl Default for CompletionTree {
             root: CompletionNode::new(inclusions.clone()),
             inclusions,
             min_word_len: 5,
+            separator: WordSeparator::Whitespace,
         }
     }
 }
@@ -72,9 +81,13 @@ impl CompletionTree {
     /// use rs_complete::CompletionTree;
     ///
     /// let mut completions = CompletionTree::default();
+    /// completions.set_min_word_len(1);
     ///
     /// // Insert multiple words
     /// completions.insert("a line with many words");
+    /// assert_eq!(completions.word_count(), 5);
+    /// completions.clear();
+    /// assert_eq!(completions.word_count(), 0);
     ///
     /// // The above line is equal to the following:
     /// completions.insert("a");
@@ -82,13 +95,54 @@ impl CompletionTree {
     /// completions.insert("with");
     /// completions.insert("many");
     /// completions.insert("words");
+    /// assert_eq!(completions.word_count(), 5);
     /// ```
     pub fn insert(&mut self, line: &str) {
-        for word in line.split_whitespace() {
-            if word.len() >= self.min_word_len {
-                self.root.insert(word.chars());
-            }
+        match self.separator {
+            WordSeparator::Whitespace => line.split_whitespace().for_each(|w| self.insert_word(w)),
+            WordSeparator::Separator(sep) => line.split(sep).for_each(|w| self.insert_word(w)),
+        };
+    }
+
+    fn insert_word(&mut self, word: &str) {
+        if word.len() >= self.min_word_len {
+            self.root.insert(word.chars());
         }
+    }
+
+    /// Changes the word separator used by CompletionTree::insert()
+    /// If left unchanged the default is WordSeparator::Whitespace
+    ///
+    /// # Arguments
+    ///
+    /// * `separator`   A WordSeparator
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// extern crate rs_complete;
+    /// use rs_complete::{CompletionTree, WordSeparator};
+    ///
+    /// let mut completions = CompletionTree::default();
+    /// completions.separator(WordSeparator::Separator("|"));
+    /// completions.set_min_word_len(1);
+    ///
+    /// // Insert multiple words
+    /// completions.insert("a|line|with|many|words");
+    /// assert_eq!(completions.word_count(), 5);
+    /// completions.clear();
+    /// assert_eq!(completions.word_count(), 0);
+    ///
+    /// // The above line is equal to the following:
+    /// completions.insert("a");
+    /// completions.insert("line");
+    /// completions.insert("with");
+    /// completions.insert("many");
+    /// completions.insert("words");
+    /// assert_eq!(completions.word_count(), 5);
+    /// ```
+    pub fn separator(&mut self, separator: WordSeparator) {
+        self.separator = separator;
     }
 
     /// Returns an optional vector of completions based on the provided input
