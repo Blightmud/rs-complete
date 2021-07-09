@@ -46,7 +46,7 @@ pub use completion_tree::WordSeparator;
 
 #[cfg(test)]
 mod tests {
-    use crate::completion_tree::CompletionTree;
+    use crate::{completion_tree::CompletionTree, WordSeparator};
 
     #[test]
     fn test_completion() {
@@ -79,6 +79,37 @@ mod tests {
     fn test_multi_insert() {
         let mut tree = CompletionTree::default();
         tree.insert("wollybugger workerbee worldleader batman robin wording");
+        assert_eq!(tree.word_count(), 6);
+        let completions = tree.complete("wo").unwrap();
+        assert!(completions.contains(&"workerbee".to_string()));
+        assert!(completions.contains(&"wollybugger".to_string()));
+        assert!(completions.contains(&"wording".to_string()));
+        assert!(completions.contains(&"worldleader".to_string()));
+        assert!(!completions.contains(&"batman".to_string()));
+        assert!(!completions.contains(&"robin".to_string()));
+    }
+
+    #[test]
+    fn test_multi_insert_custom_sep_1() {
+        let mut tree = CompletionTree::default();
+        tree.separator(WordSeparator::Separator("&"));
+        tree.insert("wollybugger&workerbee&worldleader&batman&robin&wording");
+        assert_eq!(tree.word_count(), 6);
+        let completions = tree.complete("wo").unwrap();
+        assert!(completions.contains(&"workerbee".to_string()));
+        assert!(completions.contains(&"wollybugger".to_string()));
+        assert!(completions.contains(&"wording".to_string()));
+        assert!(completions.contains(&"worldleader".to_string()));
+        assert!(!completions.contains(&"batman".to_string()));
+        assert!(!completions.contains(&"robin".to_string()));
+    }
+
+    #[test]
+    fn test_multi_insert_custom_sep_2() {
+        let mut tree = CompletionTree::default();
+        tree.separator(WordSeparator::Separator("slaad"));
+        tree.insert("wollybuggerslaadworkerbeeslaadworldleaderslaadbatmanslaadrobinslaadwording");
+        assert_eq!(tree.word_count(), 6);
         let completions = tree.complete("wo").unwrap();
         assert!(completions.contains(&"workerbee".to_string()));
         assert!(completions.contains(&"wollybugger".to_string()));
