@@ -69,7 +69,7 @@ impl CompletionTree {
     }
 
     /// Inserts one or more words into the completion tree for later use.
-    /// Input is automatically split on 'whitespace' using String::split_whitespace().
+    /// Input is automatically split using the defined [WordSeparator] (see [CompletionTree::separator]).
     ///
     /// # Arguments
     ///
@@ -111,7 +111,7 @@ impl CompletionTree {
     }
 
     /// Changes the word separator used by CompletionTree::insert()
-    /// If left unchanged the default is WordSeparator::Whitespace
+    /// If left unchanged the default is [WordSeparator::Whitespace]
     ///
     /// # Arguments
     ///
