@@ -1,5 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet};
-use std::{rc::Rc, str::Chars};
+use std::str::Chars;
+use std::sync::Arc;
 
 /// Word separation type used by CompletionTree
 #[derive(Debug, Clone, PartialEq)]
@@ -12,14 +13,14 @@ pub enum WordSeparator {
 #[derive(Debug, Clone)]
 pub struct CompletionTree {
     root: CompletionNode,
-    inclusions: Rc<BTreeSet<char>>,
+    inclusions: Arc<BTreeSet<char>>,
     min_word_len: usize,
     separator: WordSeparator,
 }
 
 impl Default for CompletionTree {
     fn default() -> Self {
-        let inclusions = Rc::new(BTreeSet::new());
+        let inclusions = Arc::new(BTreeSet::new());
         Self {
             root: CompletionNode::new(inclusions.clone()),
             inclusions,
@@ -60,7 +61,7 @@ impl CompletionTree {
         incl.iter().for_each(|c| {
             set.insert(*c);
         });
-        let inclusions = Rc::new(set);
+        let inclusions = Arc::new(set);
         Self {
             root: CompletionNode::new(inclusions.clone()),
             inclusions,
@@ -268,11 +269,11 @@ impl CompletionTree {
 struct CompletionNode {
     subnodes: BTreeMap<char, CompletionNode>,
     leaf: bool,
-    inclusions: Rc<BTreeSet<char>>,
+    inclusions: Arc<BTreeSet<char>>,
 }
 
 impl CompletionNode {
-    fn new(incl: Rc<BTreeSet<char>>) -> Self {
+    fn new(incl: Arc<BTreeSet<char>>) -> Self {
         Self {
             subnodes: BTreeMap::new(),
             leaf: false,
