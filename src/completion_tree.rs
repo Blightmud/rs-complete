@@ -170,7 +170,7 @@ impl CompletionTree {
     /// ```
     pub fn complete(&self, line: &str) -> Option<Vec<String>> {
         if !line.is_empty() {
-            let last_word = line.split_whitespace().last().unwrap();
+            let last_word = line.split_whitespace().last().unwrap_or("");
             if let Some(mut extensions) = self.root.complete(last_word.chars()) {
                 extensions.sort();
                 return Some(
